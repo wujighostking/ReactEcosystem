@@ -1,3 +1,4 @@
+import type { Heap, Node } from '../src/SchedulerMinHeap'
 import { describe, expect, it } from 'vitest'
 import { peek, pop, push } from '../src/SchedulerMinHeap'
 

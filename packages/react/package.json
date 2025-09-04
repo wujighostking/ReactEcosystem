@@ -1,0 +1,11 @@
+{
+  "name": "react",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsdown -c=tsdown.config.build.ts"
+  }
+}

@@ -10,8 +10,8 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "dev": "tsdown --config=tsdown.config.dev.ts",
-    "build": "tsdown --config=tsdown.config.build.ts",
+    "dev": "tsdown",
+    "build:react": "pnpm --filter react build",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix",
     "test": "vitest"
