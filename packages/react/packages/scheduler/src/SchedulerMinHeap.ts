@@ -32,49 +32,57 @@ export function pop<T extends Node>(heap: Heap<T>): T | undefined {
   return first
 }
 
+// 从下向上调整
 function siftUp(heap: Heap<Node>, node: Node, i: number) {
   let index = i
 
   while (index > 0) {
     const parentIndex = (index - 1) >>> 1
     const parent = heap[parentIndex]!
+
     if (compare(parent, node) > 0) {
-      heap[index] = parent
       heap[parentIndex] = node
+      heap[index] = parent
       index = parentIndex
+
+      continue
     }
-    else {
-      return
-    }
+
+    return
   }
 }
 
+// 从上往下调整
 function siftDown(heap: Heap<Node>, node: Node, i: number) {
   let index = i
   const length = heap.length
   const halfLength = length >>> 1
-
   while (index < halfLength) {
+    const parent = heap[index]!
     const leftIndex = (index + 1) * 2 - 1
     const left = heap[leftIndex]!
+
     const rightIndex = leftIndex + 1
     const right = heap[rightIndex]!
 
-    if (compare(left, node) < 0) {
-      if (rightIndex < length && compare(right, left) < 0) {
-        heap[index] = right
-        heap[rightIndex] = node
-        index = rightIndex
-      }
-      else {
+    if (compare(left, parent) < 0) {
+      // 左节点 < 父节点 ==> 判断左节点和右节点
+      if (rightIndex < length && compare(left, right) < 0) {
+        // 左节点小
         heap[index] = left
-        heap[leftIndex] = node
+        heap[leftIndex] = parent
         index = leftIndex
       }
+      else {
+        // 右节点小
+        heap[index] = right
+        heap[rightIndex] = parent
+        index = rightIndex
+      }
     }
-    else if (rightIndex < length && compare(right, node) < 0) {
+    else if (rightIndex < length && compare(right, parent) < 0) {
       heap[index] = right
-      heap[rightIndex] = node
+      heap[rightIndex] = parent
       index = rightIndex
     }
     else {
