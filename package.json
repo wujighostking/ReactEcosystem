@@ -10,7 +10,7 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "dev": "tsdown",
+    "dev:react": "pnpm --filter react dev",
     "build:react": "pnpm --filter react build",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix",

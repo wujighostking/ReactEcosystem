@@ -6,6 +6,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "tsdown -c=tsdown.config.dev.ts",
     "build": "tsdown -c=tsdown.config.build.ts"
   }
 }
