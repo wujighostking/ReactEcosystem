@@ -6,7 +6,7 @@ export const config: UserConfig = readdirSync('./packages').map(dir => ({
   platform: 'neutral',
   format: 'esm',
   dts: true,
-  minify: true,
+  minify: false,
   clean: true,
   sourcemap: true,
   entry: `./packages/${dir}/src/index.ts`,
