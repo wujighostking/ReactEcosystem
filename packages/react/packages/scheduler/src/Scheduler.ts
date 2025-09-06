@@ -40,11 +40,10 @@ export function shouldYieldToHost() {
   return true
 }
 
-export function workLoop(initialTime: number) {
+export function workLoop(initialTime: number): boolean {
   const currentTime = initialTime
   currentTask = peek(taskQueue)
 
-  // eslint-disable-next-line no-unmodified-loop-condition
   while (currentTask !== null) {
     if (currentTask.expirationTime > currentTime && shouldYieldToHost()) {
       break
@@ -59,11 +58,26 @@ export function workLoop(initialTime: number) {
 
       if (isFunction(continuationCallback)) {
         currentTask.callback = continuationCallback
+        return true
+      }
+      else {
+        if (currentTask === peek(taskQueue)) {
+          pop(taskQueue)
+        }
       }
     }
     else {
       pop(taskQueue)
     }
+
+    currentTask = peek(taskQueue)
+  }
+
+  if (currentTask !== null) {
+    return true
+  }
+  else {
+    return false
   }
 }
 
