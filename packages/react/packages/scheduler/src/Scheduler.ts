@@ -11,7 +11,7 @@ import {
 import { peek, pop, push } from './SchedulerMinHeap'
 import { IdlePriority, ImmediatePriority, LowPriority, NoPriority, UserBlockingPriority } from './SchedulerPriorities'
 
-type Callback = (...args: any[]) => Callback | undefined | null
+type Callback = (...args: any[]) => Callback | undefined | null | void
 
 export interface Task {
   id: number
@@ -29,7 +29,6 @@ let currentTask: Task | null = null
 let currentPriorityLevel: PriorityLevel = NoPriority
 
 // 记录时间切片的起始值，时间戳
-// eslint-disable-next-line prefer-const
 let startTime = -1
 
 // 时间切片，这是一个时间段
@@ -38,6 +37,9 @@ const frameInterval = 5
 let taskIdCounter: number = 0
 
 let isHostCallbackScheduled: boolean = false
+let isMessageLoopRunning: boolean = false
+
+let isPerformingWork = false
 
 export function shouldYieldToHost() {
   const timeElapsed = getCurrentTime() - startTime
@@ -54,7 +56,7 @@ export function workLoop(initialTime: number): boolean {
   const currentTime = initialTime
   currentTask = peek(taskQueue)
 
-  while (currentTask !== null) {
+  while (currentTask) {
     if (currentTask.expirationTime > currentTime && shouldYieldToHost()) {
       break
     }
@@ -129,13 +131,61 @@ export function scheduleCallback(priorityLevel: PriorityLevel, callback: Callbac
   newTask.sortIndex = expirationTime
   push(taskQueue, newTask)
 
-  if (!isHostCallbackScheduled) {
+  if (!isHostCallbackScheduled && !isPerformingWork) {
     isHostCallbackScheduled = true
     requestHostCallback()
   }
 }
 
-function requestHostCallback() {}
+function requestHostCallback() {
+  if (!isMessageLoopRunning) {
+    isMessageLoopRunning = true
+    schedulePerformWorkUntilDeadline()
+  }
+}
+
+function performWorkUntilDeadline() {
+  if (isMessageLoopRunning) {
+    const currentTime = getCurrentTime()
+    startTime = currentTime
+
+    let hasMoreWork = true
+    try {
+      hasMoreWork = flushWork(currentTime)
+    }
+    finally {
+      if (hasMoreWork) {
+        schedulePerformWorkUntilDeadline()
+      }
+      else {
+        isMessageLoopRunning = false
+      }
+    }
+  }
+}
+
+function flushWork(initialTime: number) {
+  isHostCallbackScheduled = false
+  isPerformingWork = true
+
+  const previousPriorityLevel = getCurrentPriorityLevel()
+
+  try {
+    return workLoop(initialTime)
+  }
+  finally {
+    currentTask = null
+    currentPriorityLevel = previousPriorityLevel
+    isPerformingWork = false
+  }
+}
+
+const channel = new MessageChannel()
+const port = channel.port2
+channel.port1.onmessage = performWorkUntilDeadline
+function schedulePerformWorkUntilDeadline() {
+  port.postMessage(null)
+}
 
 export function getCurrentPriorityLevel() {
   return currentPriorityLevel

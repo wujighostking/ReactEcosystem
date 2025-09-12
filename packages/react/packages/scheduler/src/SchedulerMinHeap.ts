@@ -53,20 +53,20 @@ function siftUp(heap: Heap<Node>, node: Node, i: number) {
 }
 
 // 从上往下调整
-function siftDown(heap: Heap<Node>, parent: Node, i: number) {
+function siftDown(heap: Heap<Node>, node: Node, i: number) {
+  const parent = node
   let index = i
   const length = heap.length
   const halfLength = length >>> 1
   while (index < halfLength) {
     const leftIndex = (index + 1) * 2 - 1
     const left = heap[leftIndex]!
-
     const rightIndex = leftIndex + 1
     const right = heap[rightIndex]!
 
-    if (compare(parent, left) < 0) {
+    if (parent && left && compare(parent, left) < 0) {
       // 父节点 < 左节点 ==> 判断父节点和右节点
-      if (rightIndex < length && compare(parent, right) < 0) {
+      if (rightIndex <= length && parent && right && compare(parent, right) < 0) {
         // 父节点 < 右节点
         return
       }
@@ -77,7 +77,7 @@ function siftDown(heap: Heap<Node>, parent: Node, i: number) {
         index = rightIndex
       }
     }
-    else if (rightIndex < length && compare(right, left) < 0) {
+    else if (rightIndex <= length && right && left && compare(right, left) < 0) {
       // 右节点 < 左节点
       heap[rightIndex] = parent
       heap[index] = right
