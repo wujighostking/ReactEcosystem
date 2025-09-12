@@ -1,6 +1,6 @@
-import type { Heap, Node } from '../src/SchedulerMinHeap'
+import type { Heap, Node } from '../src'
 import { describe, expect, it } from 'vitest'
-import { peek, pop, push } from '../src/SchedulerMinHeap'
+import { peek, pop, push } from '../src'
 
 let idCount = 0
 function createNode(val: number) {
