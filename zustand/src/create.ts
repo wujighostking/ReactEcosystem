@@ -13,7 +13,7 @@ export function create(stateSetup: StateSetup) {
 function createImpl(stateSetup: StateSetup) {
   let state: StoreResult
 
-  const listeners: Array<Subscriber> = []
+  const listeners: Set<Subscriber> = new Set()
 
   const getState = () => state
 
@@ -31,10 +31,10 @@ function createImpl(stateSetup: StateSetup) {
   state = stateSetup(setState, getState)
 
   function subscribe(subscriber: Subscriber) {
-    listeners.push(subscriber)
+    listeners.add(subscriber)
 
     return () => {
-      listeners.splice(listeners.indexOf(subscriber), 1)
+      listeners.delete(subscriber)
     }
   }
 
