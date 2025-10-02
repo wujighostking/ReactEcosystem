@@ -51,17 +51,17 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.3.0)(jiti@2.5.1)(yaml@2.8.1)
 
-  packages/react: {}
+  react: {}
 
-  packages/react/packages/scheduler:
+  react/packages/scheduler:
     dependencies:
       shared:
         specifier: workspace:*
         version: link:../shared
 
-  packages/react/packages/shared: {}
+  react/packages/shared: {}
 
-  packages/zustand:
+  zustand:
     dependencies:
       shared:
         specifier: workspace:*
