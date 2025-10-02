@@ -13,7 +13,10 @@
   "files": [
     "dist"
   ],
-  "scripts": {},
+  "scripts": {
+    "dev": "tsdown -c=tsdown.config.dev.ts",
+    "build": "tsdown -c=tsdown.config.build.ts"
+  },
   "dependencies": {
     "shared": "workspace:*"
   }

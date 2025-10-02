@@ -11,7 +11,9 @@
   "main": "index.js",
   "scripts": {
     "dev:react": "pnpm --filter react dev",
+    "dev:zustand": "pnpm --filter zustand dev",
     "build:react": "pnpm --filter react build",
+    "build:zustand": "pnpm --filter zustand build",
     "commitlint": "commitlint --edit",
     "lint": "eslint --fix",
     "test": "vitest"
