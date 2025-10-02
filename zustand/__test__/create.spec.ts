@@ -19,6 +19,12 @@ describe('test zustand', () => {
         }
       })
     },
+
+    addAgeFromObject: (age: number) => {
+      set({
+        age,
+      })
+    },
   }))
 
   const store = useStore()
@@ -51,6 +57,14 @@ describe('test zustand', () => {
     minusAge()
 
     expect(store.getState().age).toBe(0)
+  })
+
+  it('test newState is object', () => {
+    const newAge = 10
+    const { addAgeFromObject } = store
+    addAgeFromObject(newAge)
+
+    expect(store.getState().age).toBe(newAge)
   })
 
   it('test subscriber', () => {

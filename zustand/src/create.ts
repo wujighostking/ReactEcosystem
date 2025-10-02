@@ -1,7 +1,7 @@
 import { assign, hasChange, isFunction } from 'shared'
 
 export type StateSetup<T = Record<any, any>> = (set: SetState, get: GetState) => T
-type SetState = (setNewState: (state: StoreResult) => StoreResult) => void
+type SetState = (newState: StoreResult | ((state: StoreResult) => StoreResult)) => void
 type GetState = () => Record<any, any>
 type StoreResult = ReturnType<StateSetup>
 type Subscriber = (newState: StoreResult, prevState: StoreResult) => void
@@ -17,8 +17,8 @@ function createImpl(stateSetup: StateSetup) {
 
   const getState = () => state
 
-  const setState = (setNewState: (state: StoreResult) => StoreResult) => {
-    const nextState = setNewState(state)
+  const setState = (newState: StoreResult | ((state: StoreResult) => StoreResult)) => {
+    const nextState = isFunction(newState) ? newState(state) : newState
     const prevState = state
 
     if (hasChange(nextState, prevState)) {
