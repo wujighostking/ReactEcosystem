@@ -52,4 +52,16 @@ describe('test zustand', () => {
 
     expect(store.getState().age).toBe(0)
   })
+
+  it('test subscriber', () => {
+    const store = useStore()
+
+    store.subscribe((newState: any, prevState: any) => {
+      expect(newState.age).toBe(prevState.age + 1)
+    })
+
+    store.addAge()
+    store.addAge()
+    store.addAge()
+  })
 })
