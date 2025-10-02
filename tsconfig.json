@@ -4,6 +4,7 @@
     "target": "esnext",
     "jsx": "react-jsx",
     "moduleDetection": "force",
+    "baseUrl": ".",
     // File Layout
     // "rootDir": "./src",
     // "outDir": "./dist",
@@ -12,6 +13,9 @@
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
     "moduleResolution": "node10",
+    "paths": {
+      "shared": ["./react/packages/shared/src/index.ts"]
+    },
     "types": [],
 
     // Style Options

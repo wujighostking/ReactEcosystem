@@ -1,7 +1,6 @@
 import type { Heap } from './SchedulerMinHeap'
 import type { PriorityLevel } from './SchedulerPriorities'
-import { getCurrentTime, isFunction } from 'shared'
-import { isNumber } from 'shared/src'
+import { getCurrentTime, isFunction, isNumber } from 'shared'
 
 import {
   lowPriorityTimeout,
