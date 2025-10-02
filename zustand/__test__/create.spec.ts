@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { create } from '../src'
 
 describe('test zustand', () => {
@@ -59,23 +59,37 @@ describe('test zustand', () => {
     expect(store.getState().age).toBe(0)
   })
 
+  it('test subscriber', () => {
+    const store = useStore()
+
+    const subscriber = () => (newState: any, prevState: any) => {
+      expect(newState.age).toBe(prevState.age + 1)
+    }
+    const addAgeSpy = vi.fn(subscriber)
+
+    const unsubscribe = store.subscribe(addAgeSpy)
+
+    expect(addAgeSpy).not.toHaveBeenCalled()
+
+    store.addAge()
+    store.addAge()
+    store.addAge()
+
+    // 取消订阅
+    unsubscribe()
+
+    expect(addAgeSpy).toHaveBeenCalledTimes(3)
+
+    store.addAge()
+
+    expect(addAgeSpy).not.toHaveBeenCalledTimes(4)
+  })
+
   it('test newState is object', () => {
     const newAge = 10
     const { addAgeFromObject } = store
     addAgeFromObject(newAge)
 
     expect(store.getState().age).toBe(newAge)
-  })
-
-  it('test subscriber', () => {
-    const store = useStore()
-
-    store.subscribe((newState: any, prevState: any) => {
-      expect(newState.age).toBe(prevState.age + 1)
-    })
-
-    store.addAge()
-    store.addAge()
-    store.addAge()
   })
 })

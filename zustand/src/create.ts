@@ -32,6 +32,10 @@ function createImpl(stateSetup: StateSetup) {
 
   function subscribe(subscriber: Subscriber) {
     listeners.push(subscriber)
+
+    return () => {
+      listeners.splice(listeners.indexOf(subscriber), 1)
+    }
   }
 
   function createStore() {
